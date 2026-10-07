@@ -7,6 +7,7 @@ responder perguntas e voltar para a sessão.
 ## Para quem serve
 
 - **Fedora 44 com KDE Plasma 6 no Wayland:** versão 1.0.1.
+- **Linux Mint 22 (Cinnamon, X11):** versão 1.1.0, com pacote `.deb` próprio. Veja [Linux Mint 22](#linux-mint-22).
 - **Windows 10 e 11 (64 bits):** versão 1.1.0, uma **prévia**. Veja [Windows (prévia)](#windows-prévia) para o que já
   funciona e o que ainda falta.
 - Não funciona no GNOME nem no macOS.
@@ -17,12 +18,39 @@ responder perguntas e voltar para a sessão.
 | Arquivo | Para | Versão | SHA-256 |
 |---|---|---|---|
 | [`farol-1.0.1-1.x86_64.rpm`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.0.1-1.x86_64.rpm) | Fedora 44 KDE | 1.0.1 | `78b6e60979cfe9f296981f1bae7dcd7ece72df09e24bcb300d75a2c3ffee77b9` |
+| [`farol_1.1.0_mint22_amd64.deb`](https://github.com/schneiderjaoo/farol-release/raw/main/farol_1.1.0_mint22_amd64.deb) | Linux Mint 22 | 1.1.0 | `f862398c313d46d82e46c1dbc7eb360da57283543c4adb9580bb67f77f30e2d4` |
 | [`Farol-1.1.0-windows-x64.zip`](https://github.com/schneiderjaoo/farol-release/raw/main/Farol-1.1.0-windows-x64.zip) | Windows 10 e 11 | 1.1.0 (prévia) | `fb104abc34c121b242879f3acf209f638464511a58ff84e5d1acc0140f0db6dd` |
 | [`farol-1.1.0-fonte.tar.gz`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.1.0-fonte.tar.gz) | Código-fonte | 1.1.0 | `60eaf1259feb88ee94f70dbce37b6fd54754ec300af225247c0b20f0a2a6c6db` |
 | [`farol-1.1.0-fonte.zip`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.1.0-fonte.zip) | Código-fonte (o mesmo, em zip) | 1.1.0 | `76a0aa2f7b5b9eec01797fe3b88cf9971778ede7512355f455e2b9f65acd867f` |
 
-Ainda não há pacote `.deb` pronto: no Linux Mint 22 e nas outras distribuições, o caminho por enquanto é o
+O `.deb` é só para o Linux Mint 22 (ele leva o próprio Qt). Nas outras distribuições, o caminho é o
 [código-fonte](#código-fonte).
+
+## Linux Mint 22
+
+Novo na 1.1.0. Baixe o `farol_1.1.0_mint22_amd64.deb` e, na pasta onde ele ficou:
+
+```sh
+sha256sum farol_1.1.0_mint22_amd64.deb      # compare com a tabela
+sudo apt install ./farol_1.1.0_mint22_amd64.deb
+```
+
+O **Farol** aparece no menu de aplicativos. O pacote ocupa uns 90 MB instalado porque leva junto o Qt de que precisa
+(o do Mint 22 é antigo demais para a ilha); tudo fica em `/opt/farol`.
+
+Para ligar ao Claude Code: abra o Farol, clique com o botão direito no ícone dele na bandeja e escolha
+**Claude Code hooks → Install…**. O Farol mostra o que vai mudar em `~/.claude/settings.json`, faz um backup e só
+grava depois que você confirma. Abra então uma sessão nova do Claude Code. O hook usa o Python 3 que já vem no Mint.
+
+No Mint a ilha é uma janela sem moldura, sempre por cima e em todas as áreas de trabalho. Os atalhos de
+**Settings… → Atalhos** são pegos direto do servidor X: as combinações que o Cinnamon já usa são recusadas, e
+`Ctrl+Alt+F1`…`F12` não servem (o X fica com elas).
+
+Para abrir junto com o sistema: *Aplicativos de inicialização → Adicionar*, apontando para
+`/usr/share/applications/local.joao.Farol.desktop`. Para tirar: desinstale os hooks pela bandeja
+(**Claude Code hooks → Uninstall…**) e rode `sudo apt remove farol`.
+
+Não funciona no Cinnamon com Wayland nem no GNOME.
 
 ## Código-fonte
 
@@ -35,7 +63,7 @@ O que há para cada sistema:
 | Sistema | Como compilar | Estado |
 |---|---|---|
 | Fedora e outras distribuições com KDE Plasma 6 (Wayland) | `README.md`, "Fedora KDE Plasma: instalação rápida" | o de sempre |
-| Linux Mint 22 (Cinnamon, X11) | `linux/packaging/README.md`: gera o `.deb` com Docker, levando o Qt junto | novo na 1.1.0 |
+| Linux Mint 22 (Cinnamon, X11) | `linux/packaging/README.md`: gera o `.deb` com Docker, levando o Qt junto | novo na 1.1.0; o `.deb` pronto está acima |
 | Debian 13, Ubuntu 25.04 em diante (com Plasma 6) | as dependências abaixo | o de sempre |
 | Windows 10 e 11 | abaixo | prévia |
 
