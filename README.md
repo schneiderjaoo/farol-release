@@ -18,8 +18,62 @@ responder perguntas e voltar para a sessão.
 |---|---|---|---|
 | [`farol-1.0.1-1.x86_64.rpm`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.0.1-1.x86_64.rpm) | Fedora 44 KDE | 1.0.1 | `78b6e60979cfe9f296981f1bae7dcd7ece72df09e24bcb300d75a2c3ffee77b9` |
 | [`Farol-1.1.0-windows-x64.zip`](https://github.com/schneiderjaoo/farol-release/raw/main/Farol-1.1.0-windows-x64.zip) | Windows 10 e 11 | 1.1.0 (prévia) | `fb104abc34c121b242879f3acf209f638464511a58ff84e5d1acc0140f0db6dd` |
+| [`farol-1.1.0-fonte.tar.gz`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.1.0-fonte.tar.gz) | Código-fonte | 1.1.0 | `60eaf1259feb88ee94f70dbce37b6fd54754ec300af225247c0b20f0a2a6c6db` |
+| [`farol-1.1.0-fonte.zip`](https://github.com/schneiderjaoo/farol-release/raw/main/farol-1.1.0-fonte.zip) | Código-fonte (o mesmo, em zip) | 1.1.0 | `76a0aa2f7b5b9eec01797fe3b88cf9971778ede7512355f455e2b9f65acd867f` |
 
-Ainda não há pacote `.deb`.
+Ainda não há pacote `.deb` pronto: no Linux Mint 22 e nas outras distribuições, o caminho por enquanto é o
+[código-fonte](#código-fonte).
+
+## Código-fonte
+
+Os dois arquivos `farol-1.1.0-fonte` têm o mesmo conteúdo: o código do Farol (C++20, Qt 6 e QML, em `linux/`), o
+hook do Claude Code (`linux/hook/farol-hook`, em Python), os testes, os desenhos e os documentos de projeto (`docs/`).
+Servem para ler, modificar e compilar. A licença é a MIT.
+
+O que há para cada sistema:
+
+| Sistema | Como compilar | Estado |
+|---|---|---|
+| Fedora e outras distribuições com KDE Plasma 6 (Wayland) | `README.md`, "Fedora KDE Plasma: instalação rápida" | o de sempre |
+| Linux Mint 22 (Cinnamon, X11) | `linux/packaging/README.md`: gera o `.deb` com Docker, levando o Qt junto | novo na 1.1.0 |
+| Debian 13, Ubuntu 25.04 em diante (com Plasma 6) | as dependências abaixo | o de sempre |
+| Windows 10 e 11 | abaixo | prévia |
+
+Precisa de Qt 6.8 ou mais novo. As dependências no Fedora:
+
+```sh
+sudo dnf install cmake ninja-build gcc-c++ python3 \
+    qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtmultimedia-devel \
+    layer-shell-qt-devel kf6-kstatusnotifieritem-devel kf6-kglobalaccel-devel kf6-kidletime-devel
+```
+
+No Debian 13 ou Ubuntu 25.04 em diante:
+
+```sh
+sudo apt install cmake ninja-build g++ python3 extra-cmake-modules \
+    qt6-base-dev qt6-declarative-dev qt6-multimedia-dev liblayershellqtinterface-dev \
+    libkf6statusnotifieritem-dev libkf6globalaccel-dev libkf6idletime-dev
+```
+
+Depois, em qualquer um dos dois:
+
+```sh
+tar xf farol-1.1.0-fonte.tar.gz && cd farol-1.1.0
+cmake -S linux -B linux/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFAROL_BUILD_SPIKES=OFF
+cmake --build linux/build --target farol
+cmake --install linux/build --prefix ~/.local
+```
+
+No Windows, com o Visual Studio 2022 Build Tools (carga de C++) e o Qt 6.10 para MSVC em `C:\Qt\6.10.3\msvc2022_64`
+(outro lugar: variável `FAROL_QT`):
+
+```bat
+linux\scripts\win.bat cmake -S linux -B linux/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DFAROL_BUILD_SPIKES=OFF
+linux\scripts\win.bat cmake --build linux/build
+linux\scripts\win.bat ctest --test-dir linux/build --output-on-failure
+```
+
+O desenho do port para Windows, com o que falta, está em `docs/superpowers/specs/2026-10-07-farol-no-windows-design.md`.
 
 ## Windows (prévia)
 
